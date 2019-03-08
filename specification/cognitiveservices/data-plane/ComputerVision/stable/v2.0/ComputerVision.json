@@ -71,6 +71,9 @@
             "$ref": "#/parameters/ServiceLanguage"
           },
           {
+            "$ref": "#/parameters/DescriptionExclude"
+          },
+          {
             "$ref": "#/parameters/ImageUrl"
           }
         ],
@@ -97,7 +100,7 @@
     },
     "/describe": {
       "post": {
-        "description": "This operation generates a description of an image in human readable language with complete sentences. The description is based on a collection of content tags, which are also returned by the operation. More than one description can be generated for each image. Descriptions are ordered by their confidence score. All descriptions are in English.\r\nTwo input methods are supported -- (1) Uploading an image or (2) specifying an image URL.\r\nA successful response will be returned in JSON. If the request failed, the response will contain an error code and a message to help understand what went wrong.",
+        "description": "This operation generates a description of an image in human readable language with complete sentences. The description is based on a collection of content tags, which are also returned by the operation. More than one description can be generated for each image. Descriptions are ordered by their confidence score. Descriptions may include results from celebrity and landmark domain models, if applicable.\r\nTwo input methods are supported -- (1) Uploading an image or (2) specifying an image URL.\r\nA successful response will be returned in JSON. If the request failed, the response will contain an error code and a message to help understand what went wrong.",
         "operationId": "DescribeImage",
         "consumes": [
           "application/json"
@@ -118,6 +121,9 @@
           },
           {
             "$ref": "#/parameters/ServiceLanguage"
+          },
+          {
+            "$ref": "#/parameters/DescriptionExclude"
           },
           {
             "$ref": "#/parameters/ImageUrl"
@@ -549,6 +555,11 @@
           "type": "boolean",
           "x-nullable": false
         },
+        "isGoryContent": {
+          "description": "A value indicating if the image is gory.",
+          "type": "boolean",
+          "x-nullable": false
+        },
         "adultScore": {
           "format": "double",
           "description": "Score from 0 to 1 that indicates how much the content is considered adult-oriented within the image.",
@@ -558,6 +569,12 @@
         "racyScore": {
           "format": "double",
           "description": "Score from 0 to 1 that indicates how suggestive is the image.",
+          "type": "number",
+          "x-nullable": false
+        },
+        "goreScore": {
+          "format": "double",
+          "description": "Score from 0 to 1 that indicates how gory is the image.",
           "type": "number",
           "x-nullable": false
         }
@@ -1322,6 +1339,23 @@
       "x-ms-parameter-location": "method",
       "x-nullable": false
     },
+    "DescriptionExclude": {
+      "name": "descriptionExclude",
+      "in": "query",
+      "description": "Turn off specified domain models when generating the description.",
+      "required": false,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Celebrities",
+          "Landmarks"
+        ]
+      },
+      "collectionFormat": "csv",
+      "default": "",
+      "x-ms-parameter-location": "method"
+    },
     "OcrLanguage": {
       "name": "language",
       "in": "query",
@@ -1368,7 +1402,7 @@
     "VisualFeatures": {
       "name": "visualFeatures",
       "in": "query",
-      "description": "A string indicating what visual feature types to return. Multiple values should be comma-separated. Valid visual feature types include: Categories - categorizes image content according to a taxonomy defined in documentation. Tags - tags the image with a detailed list of words related to the image content. Description - describes the image content with a complete English sentence. Faces - detects if faces are present. If present, generate coordinates, gender and age. ImageType - detects if image is clipart or a line drawing. Color - determines the accent color, dominant color, and whether an image is black&white. Adult - detects if the image is pornographic in nature (depicts nudity or a sex act).  Sexually suggestive content is also detected. Objects - detects various objects within an image, including the approximate location. The Objects argument is only available in English. Brands - detects various brands within an image, including the approximate location. The Brands argument is only available in English.",
+      "description": "A string indicating what visual feature types to return. Multiple values should be comma-separated. Valid visual feature types include: Categories - categorizes image content according to a taxonomy defined in documentation. Tags - tags the image with a detailed list of words related to the image content. Description - describes the image content with a complete English sentence. Faces - detects if faces are present. If present, generate coordinates, gender and age. ImageType - detects if image is clipart or a line drawing. Color - determines the accent color, dominant color, and whether an image is black&white. Adult - detects if the image is pornographic in nature (depicts nudity or a sex act), or is gory (depicts extreme violence or blood). Sexually suggestive content (aka racy content) is also detected. Objects - detects various objects within an image, including the approximate location. The Objects argument is only available in English. Brands - detects various brands within an image, including the approximate location. The Brands argument is only available in English.",
       "required": false,
       "type": "array",
       "items": {
@@ -1444,6 +1478,9 @@
             "$ref": "#/parameters/ServiceLanguage"
           },
           {
+            "$ref": "#/parameters/DescriptionExclude"
+          },
+          {
             "$ref": "#/parameters/ImageStream"
           }
         ],
@@ -1507,7 +1544,7 @@
     },
     "/describe?overload=stream": {
       "post": {
-        "description": "This operation generates a description of an image in human readable language with complete sentences. The description is based on a collection of content tags, which are also returned by the operation. More than one description can be generated for each image. Descriptions are ordered by their confidence score. All descriptions are in English.\r\nTwo input methods are supported -- (1) Uploading an image or (2) specifying an image URL.\r\nA successful response will be returned in JSON. If the request failed, the response will contain an error code and a message to help understand what went wrong.",
+        "description": "This operation generates a description of an image in human readable language with complete sentences. The description is based on a collection of content tags, which are also returned by the operation. More than one description can be generated for each image. Descriptions are ordered by their confidence score. Descriptions may include results from celebrity and landmark domain models, if applicable.\r\nTwo input methods are supported -- (1) Uploading an image or (2) specifying an image URL.\r\nA successful response will be returned in JSON. If the request failed, the response will contain an error code and a message to help understand what went wrong.",
         "operationId": "DescribeImageInStream",
         "consumes": [
           "application/octet-stream",
@@ -1529,6 +1566,9 @@
           },
           {
             "$ref": "#/parameters/ServiceLanguage"
+          },
+          {
+            "$ref": "#/parameters/DescriptionExclude"
           },
           {
             "$ref": "#/parameters/ImageStream"
